@@ -1,22 +1,20 @@
 local QBCore = exports['qb-core']:GetCoreObject()
 
-RegisterServerEvent('neys-trade:removeItem')
-AddEventHandler('neys-trade:removeItem', function(item, amount)
+RegisterServerEvent('neys-trade:exchangeItem', function(id)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src) 
-    Player.Functions.RemoveItem(item, amount) 
-end)
-
-RegisterServerEvent('neys-trade:addItem')
-AddEventHandler('neys-trade:addItem', function(item, amount)
-    local src = source
-    local Player = QBCore.Functions.GetPlayer(src) 
-    Player.Functions.AddItem(item, amount) 
+    if not Player then return end
+    local data = Config.TreadeItem[id]
+    if not data then return end
+    if Player.Functions.RemoveItem(data.removeitem, data.removeitemAmount) then
+        Player.Functions.AddItem(data.additem, data.additemAmount) 
+    end
 end)
 
 QBCore.Functions.CreateCallback('neys-trade:server:hasItem', function(source, cb, item)
     local src = source
     local Player = QBCore.Functions.GetPlayer(src)
+    if not Player then return end
     local PlayerItem = Player.Functions.GetItemByName(item)
     if Player then 
         if PlayerItem ~= nil then
