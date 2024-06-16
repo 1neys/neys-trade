@@ -16,12 +16,12 @@ end)
 
 QBCore.Functions.CreateCallback('neys-trade:server:hasItem', function(source, cb, item)
     local src = source
-    local player = QBCore.Functions.GetPlayer(src)
-    local playerItem = player.Functions.GetItemByName(item)
-    if player then 
-        if playerItem ~= nil then
-            if playerItem.amount >= 1 then
-                cb(true, playerItem.label)
+    local Player = QBCore.Functions.GetPlayer(src)
+    local PlayerItem = Player.Functions.GetItemByName(item)
+    if Player then 
+        if PlayerItem ~= nil then
+            if PlayerItem.amount >= 1 then
+                cb(true, PlayerItem.label)
             end
         else
             cb(false, QBCore.Shared.Items[item].label)
