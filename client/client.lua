@@ -6,7 +6,7 @@ Citizen.CreateThread(function()
       while not HasModelLoaded(v.npcHash) do
         Wait(1)
       end
-      ped =  CreatePed(4,v.npcHash, v.coords.x,v.coords.y,v.coords.z-1, 3374176, false, true)
+      ped =  CreatePed(4,v.npcHash, v.coords.x, v.coords.y, v.coords.z - 1, 3374176, false, true)
       SetEntityHeading(ped,v.npcHeading)
       FreezeEntityPosition(ped, true)
       SetEntityInvincible(ped, true)
@@ -50,14 +50,12 @@ Citizen.CreateThread(function()
     end
 end)
 
-RegisterNetEvent('neys-trade:client:trade',function (data)
+RegisterNetEvent('neys-trade:client:trade', function(id)
   local neys = QBCore.Functions.HasItem(data.item, data.amount)
   QBCore.Functions.TriggerCallback('neys-trade:server:hasItem', function(hasItem, itemLabel)
     if hasItem then
       if neys then
-        TriggerServerEvent('neys-trade:removeItem', data.item, data.amount)
-        Wait(1500)
-        TriggerServerEvent('neys-trade:addItem', data.additem, data.additemAmount)
+        TriggerServerEvent('neys-trade:exchangeItem', id)
         lib.notify({
           title = Notify['trade_successful'],
           type = 'success'
@@ -77,11 +75,11 @@ RegisterNetEvent('neys-trade:client:trade',function (data)
   end, data.item)
 end)
 
-RegisterNetEvent('neys-trade:client:openmenu', function ()
+RegisterNetEvent('neys-trade:client:openmenu', function()
   ShowMenu()
 end)
 
-RegisterCommand(Config.TestCommand,function ()
+RegisterCommand(Config.TestCommand, function()
   if Config.UseTestCommand then
     ShowMenu()
   else
@@ -99,18 +97,13 @@ function ShowMenu()
       options = {}
   }
   local options = {}
-  for _, v in pairs(Config.TreadeItem) do
+  for k, v in pairs(Config.TreadeItem) do
     options[#options+1] = {
         title = v.title,
         description = v.description,
         icon = v.icon,
         event = 'neys-trade:client:trade',
-        args = {
-          item = v.removeitem,
-          amount = v.removeitemAmount,
-          additem = v.additem,
-          additemAmount = v.additemAmount
-      }
+        args = k
     }
   end
   resgisteredMenu["options"] = options
